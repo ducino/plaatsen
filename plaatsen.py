@@ -22,8 +22,8 @@ class Plaatsen:
         self.parse_class_config(class_cfg)
         self.load_images(image_folder)
 
-        if sum(flatten(self.class_layout)) != len(self.images):
-            error("Number of seats : {}\nNumber of images : {}".format(sum(flatten(self.class_layout)), len(self.images)))
+        if sum(flatten(self.class_layout)) != len(self.pixmaps):
+            error("Number of seats : {}\nNumber of images : {}".format(sum(flatten(self.class_layout)), len(self.pixmaps)))
             sys.exit(3)
 
     def parse_class_config(self, class_cfg):
@@ -38,11 +38,13 @@ class Plaatsen:
             sys.exit(3)
 
     def load_images(self, image_folder):
-        self.images = glob("{}/*".format(image_folder))
-        random.shuffle(self.images)
+        images = glob("{}/*".format(image_folder))
+        random.shuffle(images)
         self.pixmaps = []
-        for image in self.images:
+        for image in images:
             self.pixmaps.append(QtGui.QPixmap(image))
+            if self.pixmaps[-1].width() == 0 or self.pixmaps[-1].height() == 0:
+                self.pixmaps.remove(self.pixmaps[-1])
 
     def get_nb_rows(self):
         return len(self.class_layout)
